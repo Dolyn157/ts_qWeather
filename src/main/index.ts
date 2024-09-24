@@ -11,7 +11,8 @@ let mainWindow: BrowserWindow
 
 //  定时任务
 let periodRule:string = '1/15 * * * * *' //秒分时日月周
-let job1 = "" //定时任务1
+let job1: string = "" //定时任务1
+let isTaskRunning: boolean = false;
 
 //  和风API地址以及要查的城市
 const QWetherBaseURL: string = "https://devapi.qweather.com/v7/weather/now?"
@@ -111,6 +112,8 @@ ipcMain.on('mission', (_event, value) => {
       buttons:['ok']
     })
   }else{
+    isTaskRunning = true; // 标记任务开始执行
+    console.log('任务开始执行');
     cityID = cityMap1.get(value)
     cityName = value
     job1 = schedule.scheduleJob("weather", periodRule, async function (){
@@ -129,5 +132,23 @@ ipcMain.on('apiKey', (_event, value) => {
 
 ipcMain.on('end-mission', () => {
   schedule.gracefulShutdown()
+  isTaskRunning = false; // 重置标志
   console.log('提醒任务已结束')
+})
+
+ipcMain.on('selected-period', (_event, value) => {
+  switch (value){
+    case "seconds":
+      periodRule = '1/15 * * * * *' //秒分
+      break
+    case "minutes":
+      periodRule = '0 */1 * * * *'
+      break
+    case "hours":
+      periodRule = '0 0 */1 * * *'
+  }
+  if (isTaskRunning) {
+    schedule.rescheduleJob(job1, periodRule)
+  }
+  console.log(periodRule)
 })

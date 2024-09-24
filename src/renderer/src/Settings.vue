@@ -1,11 +1,24 @@
 
 <template>
+  <div class="box">
+    <div class="text">
+      请输入要查询的城市名称
+      <br />
+      <input class='textInput' id="city">
+      <br />
+    </div>
+    <br />
+    <div class="switch">
+      <form>
+        <p class="tip">请选择提醒时间间隔</p>
+        <select id="period1" class="selectInput" name="period1" @click='ipcSwitchPeriod'>
+          <option value="seconds">15秒</option>
+          <option value="minutes">分</option>
+          <option value="hours">时</option>
+        </select>
+      </form>
 
-  <div class="text">
-    请输入要查询的城市名称
-    <br />
-    <input class='textInput' id="city">
-    <br />
+    </div>
   </div>
   <div class="actions">
     <div class="action">
@@ -31,16 +44,39 @@ const ipcHandleStartMission = () => {
 }
 const ipcHandleEndMission = () => window.electron.ipcRenderer.send('end-mission')
 
+const ipcSwitchPeriod = () => {
+  let periods = document.getElementById('period1').value
+  window.electron.ipcRenderer.send('selected-period', periods)
+}
+
 </script>
 
 <style scoped>
 
+.box{
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column;
+}
 .textInput{
-  margin-top: 25px;
+  margin-top: 20px;
+
   width: 30%; /* 让文本框的宽度与父元素相同 */
   color: lightpink;
   box-sizing: border-box; /* 确保内边距和边框包含在宽度内 */
-  background-color: rgba(130, 130, 140, 0.8); /* 半透明白色 */
+  background-color:transparent; /* 半透明白色 */
+  border:1px solid #ffffff;
+}
+
+.selectInput{
+  margin-top: 20px;
+  width: 50%; /* 让文本框的宽度与父元素相同 */
+  color: lightpink;
+  margin-left: 25%;
+  background-color:transparent; /* 半透明白色 */
+  border:1px solid #ffffff;
 }
 
 </style>
