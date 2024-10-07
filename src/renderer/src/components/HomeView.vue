@@ -1,25 +1,26 @@
 <script setup lang="ts">
-import Versions from './components/Versions.vue'
+import Versions from './Versions.vue'
 import router from "@renderer/router/router";
 
 const startUse = (event) => {
   let text: string = document.getElementById('apiKey').value
   if (text) {
     window.electron.ipcRenderer.send('apiKey', text)
-    localStorage.setItem('apiKey', text)
+    localStorage.setItem('api_key', text)
   } else {
-    const apiKey:string = localStorage.getItem('apiKey')
+    const apiKey:string = localStorage.getItem('api_key')
     if (!apiKey) {
       alert('APIkey 不能为空')
       return
     }
+    window.electron.ipcRenderer.send('apiKey', apiKey)
   }
   router.push('/setting')
 }
 </script>
 
 <template>
-  <img alt="logo" class="logo" src="./assets/electron.svg" />
+  <img alt="logo" class="logo" src="../assets/electron.svg" />
   <div class="creator">Powered by electron-vite</div>
   <div class="text">
     欢迎使用朵琳和风天气提醒小工具

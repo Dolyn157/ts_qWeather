@@ -1,7 +1,7 @@
 import {app, shell, BrowserWindow, ipcMain, dialog} from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import {getCityMap, fetchUrl} from  './utils'
+import {getCityMap, fetchUrl} from './utils'
 import path from 'node:path'
 import schedule from 'node-schedule'
 import icon from '../../resources/icon.png?asset'
@@ -11,14 +11,14 @@ let mainWindow: BrowserWindow
 
 //  定时任务
 let periodRule:string = '1/15 * * * * *' //秒分时日月周
-let job1: string = "" //定时任务1
+let job1 //定时任务1
 let isTaskRunning: boolean = false;
 
 //  和风API地址以及要查的城市
 const QWetherBaseURL: string = "https://devapi.qweather.com/v7/weather/now?"
 let cityID: string = "101281009" //湛江
 let cityName: string = ""
-let APIKey: string = "2bd9effdc27b487798abb2f10a393bd1"
+let APIKey: string = ""
 //一些静态文件地址
 
 // 加载城市名称字典
@@ -117,8 +117,9 @@ ipcMain.on('mission', (_event, value) => {
     cityID = cityMap1.get(value)
     cityName = value
     job1 = schedule.scheduleJob("weather", periodRule, async function (){
-      const targetURL: string = `${QWetherBaseURL}location=${cityID}&key=${APIKey}`
-      const data = await fetchUrl(targetURL);
+      const data:{} = await handleGetAlert(null, QWetherBaseURL);
+      const key1:string = "CityID"
+      data[key1] = cityID
       console.log('Weather Data:', data);
       mainWindow.webContents.send('update-weather', data)
     })
@@ -131,7 +132,7 @@ ipcMain.on('apiKey', (_event, value) => {
 })
 
 ipcMain.on('end-mission', () => {
-  schedule.gracefulShutdown()
+  job1.cancel()
   isTaskRunning = false; // 重置标志
   console.log('提醒任务已结束')
 })
@@ -152,3 +153,22 @@ ipcMain.on('selected-period', (_event, value) => {
   }
   console.log(periodRule)
 })
+
+async function handleGetAlert (event, baseURL: string): Promise<{}>{
+  let targetURL: string = `${baseURL}location=${cityID}&key=${APIKey}`
+  console.log(targetURL)
+  let data:{}
+  try {
+    data = await fetchUrl(targetURL);
+    //console.log('获取的数据:', data);
+    return data
+    // 在这里执行下一步代码
+    // 例如，更新UI或进行其他操作
+  } catch (error) {
+    console.error('处理数据时出错:', error);
+    return
+  }
+
+}
+
+ipcMain.handle('get-alert', handleGetAlert)
