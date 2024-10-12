@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import Versions from './Versions.vue'
 import router from "@renderer/router/router";
+import {ref} from "vue";
+
+const apiKey = ref('')
 
 const startUse = (event) => {
-  let text: string = document.getElementById('apiKey').value
-  if (text) {
-    window.electron.ipcRenderer.send('apiKey', text)
-    localStorage.setItem('api_key', text)
+
+  if (apiKey.value) {
+    window.electron.ipcRenderer.send('apiKey', apiKey.value)
+    localStorage.setItem('api_key', apiKey.value)
   } else {
     const apiKey:string = localStorage.getItem('api_key')
     if (!apiKey) {
@@ -27,7 +30,7 @@ const startUse = (event) => {
   </div>
   <p class="tip">请输入你的和风天气APIKey</p>
   <br/>
-  <input class='textInput' id="apiKey">
+  <input class="textInput" v-model="apiKey">
   <div class="actions">
     <div class="action">
       <a @click="startUse">开始使用</a>

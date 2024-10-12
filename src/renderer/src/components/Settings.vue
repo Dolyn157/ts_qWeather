@@ -4,14 +4,14 @@
     <div class="text">
       请输入要查询的城市名称
       <br />
-      <input class='textInput' id="city">
+      <input class='textInput' v-model="cityName">
       <br />
     </div>
     <br />
     <div class="switch">
       <form>
         <p class="tip">请选择提醒时间间隔</p>
-        <select id="period1" class="selectInput" name="period1" @click='ipcSwitchPeriod'>
+        <select v-model="period1" class="selectInput" name="period1" @click="ipcSwitchPeriod">
           <option value="seconds">15秒</option>
           <option value="minutes">分</option>
           <option value="hours">时</option>
@@ -36,17 +36,20 @@
 
 <script setup lang="ts">
 import Versions from "@renderer/components/Versions.vue";
+import {ref} from "vue"
+
+const cityName = ref('')
+const period1 = ref('')
 
 //使用组合式 API 处理 dom 事件
 const ipcHandleStartMission = () => {
-  let text = document.getElementById('city').value
-  window.electron.ipcRenderer.send('mission', text)
+  window.electron.ipcRenderer.send('mission', cityName.value)
 }
 const ipcHandleEndMission = () => window.electron.ipcRenderer.send('end-mission')
 
 const ipcSwitchPeriod = () => {
-  let periods = document.getElementById('period1').value
-  window.electron.ipcRenderer.send('selected-period', periods)
+
+  window.electron.ipcRenderer.send('selected-period', period1.value)
 }
 
 </script>
