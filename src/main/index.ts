@@ -112,17 +112,25 @@ ipcMain.on('mission', (_event, value) => {
       buttons:['ok']
     })
   }else{
-    isTaskRunning = true; // 标记任务开始执行
-    console.log('任务开始执行');
-    cityID = cityMap1.get(value)
+    if (isTaskRunning===true) {
+      job1.cancel()
+    }
+
+    cityID = cityMap1.get(value).Location_ID
     cityName = value
     job1 = schedule.scheduleJob("weather", periodRule, async function (){
       const data:{} = await handleGetAlert(null, QWetherBaseURL);
-      const key1:string = "CityID"
+      const key1:string = "cityID"
+      const key2:string = "latitude"
+      const key3:string = "longitude"
       data[key1] = cityID
+      data[key2] = cityMap1.get(value).Latitude
+      data[key3] = cityMap1.get(value).Longitude
       console.log('Weather Data:', data);
       mainWindow.webContents.send('update-weather', data)
     })
+    isTaskRunning = true; // 标记任务开始执行
+    console.log('任务开始执行');
   }
 })
 
@@ -134,6 +142,7 @@ ipcMain.on('apiKey', (_event, value) => {
 ipcMain.on('end-mission', () => {
   job1.cancel()
   isTaskRunning = false; // 重置标志
+
   console.log('提醒任务已结束')
 })
 
