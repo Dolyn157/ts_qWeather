@@ -10,6 +10,9 @@
         {{ tab.label }}
       </div>
     </div>
+    <div>
+      <h3 id="name">{{ cityName }} 天气</h3>
+    </div>
     <div class="tab-content">
       <KeepAlive>
         <slot :active-tab="activeTab" />
@@ -20,7 +23,8 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue';
+import { ref, defineProps } from "vue";
+import { cityName } from '../main.ts'
 
 const props = defineProps({
   tabs: {
@@ -49,6 +53,10 @@ const activeTab = ref(props.tabs[0].name); // Set default active tab
   border-bottom: 2px solid blue;
 }
 .tab-content {
+
   padding: 20px;
+}
+#name{
+  text-align: center;
 }
 </style>

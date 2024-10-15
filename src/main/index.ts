@@ -120,12 +120,14 @@ ipcMain.on('mission', (_event, value) => {
     cityName = value
     job1 = schedule.scheduleJob("weather", periodRule, async function (){
       const data:{} = await handleGetAlert(null, QWetherBaseURL);
-      const key1:string = "cityID"
-      const key2:string = "latitude"
-      const key3:string = "longitude"
+      const key1: string = "cityID"
+      const key4: string = "cityName"
+      const key2: string = "latitude"
+      const key3: string = "longitude"
       data[key1] = cityID
       data[key2] = cityMap1.get(value).Latitude
       data[key3] = cityMap1.get(value).Longitude
+      data[key4] = cityName
       console.log('Weather Data:', data);
       mainWindow.webContents.send('update-weather', data)
     })

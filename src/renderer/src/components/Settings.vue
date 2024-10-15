@@ -4,7 +4,7 @@
     <div class="text">
       请输入要查询的城市名称
       <br />
-      <input class='textInput' v-model="cityName">
+      <input v-model="cityName" class="textInput" />
       <br />
     </div>
     <br />
@@ -17,55 +17,69 @@
           <option value="hours">时</option>
         </select>
       </form>
-
     </div>
   </div>
   <div class="actions">
     <div class="action">
-      <a id='startMission' target="_blank" rel="noreferrer" @click="ipcHandleStartMission">开始提醒</a>
+      <a
+        :id="isButtonEnable"
+        target="_blank"
+        rel="noreferrer"
+        @click="ipcHandleStartMission"
+        >开始提醒</a
+      >
     </div>
     <div class="action">
       <a target="_blank" rel="noreferrer" @click="ipcHandleEndMission">停止提醒</a>
     </div>
     <div class="action">
-      <RouterLink to="/"  >返回主页</RouterLink>
+      <RouterLink to="/">返回主页</RouterLink>
     </div>
   </div>
   <Versions />
 </template>
 
 <script setup lang="ts">
-import Versions from "@renderer/components/Versions.vue";
-import {ref} from "vue"
+import Versions from '@renderer/components/Versions.vue'
+import router from '@renderer/router/router'
+import { cityName, isButtonEnable } from '../main.ts'
+import { ref } from 'vue'
 
-const cityName = ref('')
 const period1 = ref('')
 
 //使用组合式 API 处理 dom 事件
 const ipcHandleStartMission = () => {
-  window.electron.ipcRenderer.send('mission', cityName.value)
+  if (isButtonEnable.value) {
+    window.electron.ipcRenderer.send('mission', cityName.value)
+    router.push('/details')
+  }else {
+    alert("你已经开始了一个任务，请先停止之前的任务")
+  }
+  isButtonEnable.value = false
 }
-const ipcHandleEndMission = () => window.electron.ipcRenderer.send('end-mission')
+const ipcHandleEndMission = () => {
+  window.electron.ipcRenderer.send('end-mission')
+  isButtonEnable.value = true
+}
 
 const ipcSwitchPeriod = () => {
-
   window.electron.ipcRenderer.send('selected-period', period1.value)
 }
-
 </script>
 
 <style scoped>
-
-.box{
+# false {
+  color: #42d392;
+}
+.box {
   height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-flow: column;
 }
-.textInput{
+.textInput {
   margin-top: 20px;
-
   width: 30%; /* 让文本框的宽度与父元素相同 */
   color: lightpink;
   box-sizing: border-box; /* 确保内边距和边框包含在宽度内 */
@@ -73,7 +87,7 @@ const ipcSwitchPeriod = () => {
   border:1px solid #ffffff;
 }
 
-.selectInput{
+.selectInput {
   margin-top: 20px;
   width: 50%; /* 让文本框的宽度与父元素相同 */
   color: lightpink;
@@ -81,5 +95,4 @@ const ipcSwitchPeriod = () => {
   background-color:transparent; /* 半透明白色 */
   border:1px solid #ffffff;
 }
-
 </style>

@@ -2,7 +2,8 @@
 import {onBeforeMount, ref} from 'vue'
 import Warning from "@renderer/components/Warning.vue";
 import Tabs from './Tabs.vue';
-import Ventusky from "@renderer/components/Ventusky.vue"; // Import the Tabs component
+import Ventusky from "@renderer/components/Ventusky.vue";
+import Weather from "@renderer/components/Weather.vue"; // Import the Tabs component
 
 const tabs = [
   { name: 'tab1', label: '天气概况' },
@@ -13,11 +14,11 @@ const tabs = [
 </script>
 
 <template>
-  <div class="box, scrollable-container">
+  <div class="box scrollable-container">
     <Tabs :tabs="tabs">
       <template #default="{ activeTab }">
         <div v-if="activeTab === 'tab1'">
-
+          <Weather />
         </div>
         <div v-if="activeTab === 'tab2'">
           <Warning />
@@ -43,7 +44,7 @@ div {
   unicode-bidi: isolate;
 }
 .scrollable-container {
-  max-height: 1000px; /* 根据需要调整最大高度 */
+  max-height: 800px; /* 根据需要调整最大高度 */
   overflow-y: auto; /* 启用竖向滚动条 */
   padding: 10px; /* 可选：添加内边距 */
   background-color: transparent; /* 可选：设置背景颜色 */

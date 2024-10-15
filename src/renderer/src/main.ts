@@ -1,6 +1,6 @@
 import './assets/main.css'
 
-import { createApp, provide } from 'vue'
+import { createApp, ref } from 'vue'
 import App from './App.vue'
 import router from "./router/router.ts"
 
@@ -8,7 +8,8 @@ const app = createApp(App);
 app.use(router);
 app.mount('#app');
 
-
+export const cityName: string = ref('')
+export const isButtonEnable: boolean = ref(true) //设置页面的开始提醒按钮是否可用
 
 window.weatherAPI.onUpdateWeather((value) => {
   const Noti_Title = `和风天气提醒您：`
@@ -21,17 +22,15 @@ window.weatherAPI.onUpdateWeather((value) => {
   const Latitude = value.latitude
   const Longitude = value.longitude
 
-  let Notif: window.Notification = new window.Notification(Noti_Title,
+  const Notify: window.Notification = new window.Notification(Noti_Title,
     { body: `\n"采样时间": ${obsTime}, "\n温度℃": ${temp}, "\n天气状况": ${text}, "\n风向":${windDir}, "\n风力等级":${windScale}`})
 
   localStorage.setItem('city_ID', cityID)
   //https://pinia.vuejs.org/ 全局状态
   app.provide('latitude', Latitude)
   app.provide('longitude', Longitude)
-  console.log(value.latitude + "经纬度")
-  Notif.onclick = function () {
+  console.log(value.latitude + '经纬度')
+  Notify.onclick = function () {
     router.push('/details')
   }
 })
-
-

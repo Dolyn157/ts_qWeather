@@ -27,6 +27,7 @@
     "electron-updater": "^6.1.7",
     "glob": "^11.0.0",
     "node-schedule": "^2.1.1",
+    "qweather-icons": "^1.6.0",
     "vue-router": "^4.4.5"
   },
   "devDependencies": {

@@ -39,7 +39,6 @@ function warningClass (chineseInfo: string): string {
     "warning--yellow": chineseInfo === '黄色',
     "warning--blue": chineseInfo === '蓝色',
     "warning--orange": chineseInfo === '橙色'
-
   }
 }
 
@@ -72,8 +71,8 @@ function setIcon(situation: string) {
 
 <template>
   <div v-if="isLoading">加载中</div>
-  <div v-else>
-    <div v-if="loadSuccess" >
+  <div v-else class="scrollable-container">
+    <div v-if="loadSuccess">
       <div v-for="warning in warnings" :key="warning.id" class="weather-list__row">
         <div :class="warningClass(warning.level)" class="c-city-warning-events">
           <div class="warning-events__top d-flex align-items-center">
@@ -104,7 +103,12 @@ div {
   display: block;
   unicode-bidi: isolate;
 }
-
+.scrollable-container {
+  max-height: 900px; /* 根据需要调整最大高度 */
+  overflow-y: auto; /* 启用竖向滚动条 */
+  padding: 10px; /* 可选：添加内边距 */
+  background-color: transparent; /* 可选：设置背景颜色 */
+}
 .weather-list__row{
   margin: 20px 20px 20px;
 }
