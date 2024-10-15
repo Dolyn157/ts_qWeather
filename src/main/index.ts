@@ -119,7 +119,11 @@ ipcMain.on('mission', (_event, value) => {
     cityID = cityMap1.get(value).Location_ID
     cityName = value
     job1 = schedule.scheduleJob("weather", periodRule, async function (){
-      const data:{} = await handleGetAlert(null, QWetherBaseURL);
+      const data: object | undefined = await handleGetAlert(null, QWetherBaseURL);
+      if (data == undefined){
+        console.log('设置任务失败')
+        return
+      }
       const key1: string = "cityID"
       const key4: string = "cityName"
       const key2: string = "latitude"
@@ -165,10 +169,10 @@ ipcMain.on('selected-period', (_event, value) => {
   console.log(periodRule)
 })
 
-async function handleGetAlert (event, baseURL: string): Promise<{}>{
-  let targetURL: string = `${baseURL}location=${cityID}&key=${APIKey}`
-  console.log(targetURL)
-  let data:{}
+async function handleGetAlert(event, baseURL: string): Promise<object | undefined> {
+  const targetURL: string = `${baseURL}location=${cityID}&key=${APIKey}`
+  console.log(targetURL + event)
+  let data: NonNullable<unknown>
   try {
     data = await fetchUrl(targetURL);
     //console.log('获取的数据:', data);
@@ -179,7 +183,6 @@ async function handleGetAlert (event, baseURL: string): Promise<{}>{
     console.error('处理数据时出错:', error);
     return
   }
-
 }
 
 ipcMain.handle('get-alert', handleGetAlert)

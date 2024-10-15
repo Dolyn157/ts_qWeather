@@ -1,15 +1,33 @@
 <script setup lang="ts">
 import {onBeforeMount, ref} from 'vue'
-import {Gale, Typhoon, Thunderstorm, Fog, WarningSign, Monsoon, Lightning, Heavyrain, Dizhizaihai} from '../assets.ts'
-
+import {Gale, Typhoon, Thunderstorm, Fog, WarningSign, Monsoon, Lightning, Heavyrain, Dizhizaihai} from '../assets'
 
 const qWeatherAlertURL:string = "https://devapi.qweather.com/v7/warning/now?"
 const alertData = ref(null)
 const isLoading = ref(true)
 const loadSuccess = ref(false)
 const loadingMsg = ref("加载中")
-let warningLevel = ref('yellow')
-let warnings = ref(null)
+const warningLevel = ref('yellow')
+
+interface WeatherAlert {
+  certainty: string
+  endTime: string
+  id: string
+  level: string
+  pubTime: string
+  related: string
+  sender: string
+  severity: string
+  severityColor: string
+  startTime: string
+  status: string
+  text: string
+  title: string
+  type: string
+  typeName: string
+  urgency: string
+}
+const warnings = ref<WeatherAlert[]>([])
 
 onBeforeMount(async () => {
   alertData.value = await window.weatherAPI.getAlert(qWeatherAlertURL)
@@ -19,22 +37,24 @@ onBeforeMount(async () => {
     isLoading.value = false
     return
   }
-  if(alertData.value.warning.length == 0) {
+
+  const alertJsonString = JSON.stringify(alertData.value)
+  const alertJson = JSON.parse(alertJsonString)
+  warnings.value = alertJson.warning
+  console.log( warnings.value)
+  if (warnings.value.length == 0) {
     loadingMsg.value = "暂时未查询到该地区有灾害提醒"
     isLoading.value = false
     return
   }
-  warnings = alertData.value.warning
-  console.log(alertData.value)
-  for (let i = 0; i < warnings.length; i++) {
-
-    warningLevel[i] = warnings[i].level
+  for (let i = 0; i < warnings.value.length; i++) {
+    warningLevel[i] = warnings.value[i].level
     console.log(warningLevel[i])
   }
   isLoading.value = false
   loadSuccess.value = true
 })
-function warningClass (chineseInfo: string): string {
+function warningClass (chineseInfo: string): object {
   return {
     "warning--yellow": chineseInfo === '黄色',
     "warning--blue": chineseInfo === '蓝色',
@@ -71,20 +91,20 @@ function setIcon(situation: string) {
 
 <template>
   <div v-if="isLoading">加载中</div>
-  <div v-else class="scrollable-container">
+  <div v-else>
     <div v-if="loadSuccess">
-      <div v-for="warning in warnings" :key="warning.id" class="weather-list__row">
-        <div :class="warningClass(warning.level)" class="c-city-warning-events">
+      <div v-for="weatherAlert in warnings" :key="weatherAlert.id" class="weather-list__row">
+        <div :class="warningClass(weatherAlert.level)" class="c-city-warning-events">
           <div class="warning-events__top d-flex align-items-center">
             <div class="warning-events__icon">
-              <img class="sign" :src="setIcon(warning.typeName)" alt="警告"/>
+              <img class="sign" :src="setIcon(weatherAlert.typeName)" alt="警告"/>
             </div>
             <div class="cont">
-              <h3>{{ warning.title }}</h3>
-              <p>发布日期: {{ warning.pubTime }}</p>
+              <h3>{{ weatherAlert.title }}</h3>
+              <p>发布日期: {{ weatherAlert.pubTime }}</p>
             </div>
           </div>
-          <p>{{ warning.text }}</p>
+          <p>{{ weatherAlert.text }}</p>
         </div>
       </div>
     </div>

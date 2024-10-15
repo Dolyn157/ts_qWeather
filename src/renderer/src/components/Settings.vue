@@ -22,7 +22,6 @@
   <div class="actions">
     <div class="action">
       <a
-        :id="isButtonEnable"
         target="_blank"
         rel="noreferrer"
         @click="ipcHandleStartMission"
@@ -42,17 +41,17 @@
 <script setup lang="ts">
 import Versions from '@renderer/components/Versions.vue'
 import router from '@renderer/router/router'
-import { cityName, isButtonEnable } from '../main.ts'
+import { cityName, isButtonEnable } from '../main'
 import { ref } from 'vue'
 
 const period1 = ref('')
 
 //使用组合式 API 处理 dom 事件
 const ipcHandleStartMission = () => {
-  if (isButtonEnable.value) {
+  if (isButtonEnable.valueOf()) {
     window.electron.ipcRenderer.send('mission', cityName.value)
     router.push('/details')
-  }else {
+  } else {
     alert("你已经开始了一个任务，请先停止之前的任务")
   }
   isButtonEnable.value = false

@@ -10,7 +10,7 @@ const startUse = () => {
     window.electron.ipcRenderer.send('apiKey', apiKey.value)
     localStorage.setItem('api_key', apiKey.value)
   } else {
-    const apiKey: string = localStorage.getItem('api_key')
+    const apiKey: string | null = localStorage.getItem('api_key')
     if (!apiKey) {
       alert('APIkey 不能为空')
       return

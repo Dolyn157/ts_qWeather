@@ -2,12 +2,67 @@
 import 'qweather-icons/font/qweather-icons.css'
 import { ref, onBeforeMount} from "vue";
 
+interface WeatherResponse {
+  cloud: string;
+  dew: string;
+  feelsLike: string;
+  humidity: string;
+  icon: string;
+  obsTime: string;
+  precip: string;
+  pressure: string;
+  temp: string;
+  text: string;
+  vis: string;
+  wind360: string;
+  windDir: string;
+  windScale: string;
+  windSpeed: string;
+}
+interface ServerResponse {
+  code: string
+  updateTime: string
+  fxLink: string
+  now: WeatherResponse
+  refer: object
+  cityID: string
+  latitude: number
+  longitude: number
+  cityName: string
+}
 
 const qWeatherBaseURL:string = "https://devapi.qweather.com/v7/weather/now?"
 const weatherData = ref('')
 const isLoading = ref(true)
 const loadingMsg = ref("加载中")
-
+let initialWeatherResponse: WeatherResponse = {
+  cloud: '',
+  dew: '',
+  feelsLike: '',
+  humidity: '',
+  icon: '',
+  obsTime: '',
+  precip: '',
+  pressure: '',
+  temp: '',
+  text: '',
+  vis: '',
+  wind360: '',
+  windDir: '',
+  windScale: '',
+  windSpeed: ''
+};
+let finalData: ServerResponse = {
+  code: '',
+  updateTime: '',
+  fxLink: '',
+  now: initialWeatherResponse,
+  refer: {},
+  cityID: '',
+  latitude: 0,
+  longitude: 0,
+  cityName: ''
+}
 
 onBeforeMount(async () => {
   weatherData.value = await window.weatherAPI.getAlert(qWeatherBaseURL)
@@ -15,8 +70,9 @@ onBeforeMount(async () => {
     loadingMsg.value = "数据未加载,点我重1新加载"
     return
   }
-
-  console.log(weatherData)
+  const jsonString = JSON.stringify(weatherData.value)
+  finalData = JSON.parse(jsonString) as ServerResponse
+  console.log(finalData)
   isLoading.value = false
 })
 
@@ -32,26 +88,26 @@ function getIcon(icon: string): string {
     <div class="container">
       <div class="c-city-weather-current city-weather-cloudy">
         <div class="current-weather__bg">
-          <p class="current-time">{{weatherData.now.obsTime}}</p>
+          <p class="current-time">{{finalData.now.obsTime}}</p>
           <div class="current-live">
             <div class="current-live__item">
-              <i :class="getIcon(weatherData.now.icon)"></i>
+              <i :class="getIcon(finalData.now.icon)"></i>
             </div>
             <div class="current-live__item">
-              <p>{{weatherData.now.temp}}℃</p>
-              <p>{{weatherData.now.text}}</p>
+              <p>{{finalData.now.temp}}℃</p>
+              <p>{{finalData.now.text}}</p>
             </div>
             <div class="current-basic d-flex justify-content-between align-items-center">
               <div class="block1">
-                <p id="windScale">{{weatherData.now.windScale}}级</p>
-                <p id="windDirection">{{weatherData.now.windDir}}</p>
+                <p id="windScale">{{finalData.now.windScale}}级</p>
+                <p id="windDirection">{{finalData.now.windDir}}</p>
               </div>
               <div class="block1">
-                <p id="humidity">{{weatherData.now.humidity}}%</p>
+                <p id="humidity">{{finalData.now.humidity}}%</p>
                 <p id="label1">相对湿度</p>
               </div>
               <div class="block1">
-                <p id="windLevel">{{weatherData.now.vis}}公里</p>
+                <p id="windLevel">{{finalData.now.vis}}公里</p>
                 <p id="windDirection">能见度</p>
               </div>
             </div>

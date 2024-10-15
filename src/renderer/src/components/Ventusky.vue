@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {computed, inject} from "vue";
-const latitude = inject("latitude");
-const longitude = inject("longitude");
+const latitude: number = parseFloat(inject("latitude") as string);
+const longitude: number = parseFloat(inject("longitude") as string);
 
-function round(number, precision) {
-  return Math.round(+number + "e" + precision) / Math.pow(10, precision);
+function round(number: number, precision: number) {
+  return Math.round(+number + 'e' + precision) / Math.pow(10, precision)
   //same as:
   //return Number(Math.round(+number + 'e' + precision) + 'e-' + precision);
 }
