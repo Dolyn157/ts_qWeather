@@ -4,12 +4,15 @@ const latitude: number = parseFloat(inject("latitude") as string);
 const longitude: number = parseFloat(inject("longitude") as string);
 
 function round(number: number, precision: number) {
-  return Math.round(+number + 'e' + precision) / Math.pow(10, precision)
+  if (isNaN(number)) {
+    throw new Error('Invalid input: Please provide a valid number.');
+  }
+  return number.toFixed(precision)
   //same as:
   //return Number(Math.round(+number + 'e' + precision) + 'e-' + precision);
 }
 
-const position = computed(()=>{
+const position = computed(() => {
   const lat = round(latitude, 2)
   const lng = round(longitude, 2)
   return `${lat};${lng};`

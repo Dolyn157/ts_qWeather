@@ -3,7 +3,7 @@ import {onBeforeMount, ref} from 'vue'
 import {Gale, Typhoon, Thunderstorm, Fog, WarningSign, Monsoon, Lightning, Heavyrain, Dizhizaihai} from '../assets'
 
 const qWeatherAlertURL:string = "https://devapi.qweather.com/v7/warning/now?"
-const alertData = ref(null)
+const alertData = ref('')
 const isLoading = ref(true)
 const loadSuccess = ref(false)
 const loadingMsg = ref("加载中")
@@ -30,7 +30,7 @@ interface WeatherAlert {
 const warnings = ref<WeatherAlert[]>([])
 
 onBeforeMount(async () => {
-  alertData.value = await window.weatherAPI.getAlert(qWeatherAlertURL)
+  alertData.value = (await window.weatherAPI.getAlert(qWeatherAlertURL)) as string
 
   if (!alertData.value) {
     loadingMsg.value = "数据未加载,点我重1新加载"

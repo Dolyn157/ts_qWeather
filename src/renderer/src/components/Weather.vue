@@ -65,7 +65,7 @@ let finalData: ServerResponse = {
 }
 
 onBeforeMount(async () => {
-  weatherData.value = await window.weatherAPI.getAlert(qWeatherBaseURL)
+  weatherData.value = await window.weatherAPI.getAlert(qWeatherBaseURL) as string
   if (!weatherData.value) {
     loadingMsg.value = "数据未加载,点我重1新加载"
     return

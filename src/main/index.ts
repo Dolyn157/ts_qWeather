@@ -132,7 +132,7 @@ ipcMain.on('mission', (_event, value) => {
       data[key2] = cityMap1.get(value).Latitude
       data[key3] = cityMap1.get(value).Longitude
       data[key4] = cityName
-      console.log('Weather Data:', data);
+      //console.log('Weather Data:', data);
       mainWindow.webContents.send('update-weather', data)
     })
     isTaskRunning = true; // 标记任务开始执行
