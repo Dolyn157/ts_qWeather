@@ -6,7 +6,7 @@ import {finished} from "stream/promises";
 import {parse} from "csv-parse";
 
 export const getCityMap = async (csvFile: string): Promise<Map<any, any>> => {
-  let cityM = new Map<string, object>();
+  let cityM = new Map<string, object>()
   const parser = fs
     .createReadStream(csvFile, { encoding: 'utf8'})
     .pipe(parse({
@@ -26,8 +26,17 @@ export const getCityMap = async (csvFile: string): Promise<Map<any, any>> => {
   return cityM;
 };
 
-export const fetchUrl = async (targetURL: string): Promise<{}> => {
-  let weatherData = {};
+/*interface ServerResponse {
+  code: string
+  updateTime: string
+  fxLink: string
+  now: object
+  refer: object
+}
+*/
+
+export const fetchUrl = async (targetURL: string): Promise<object> => {
+  let weatherData: object = {}
 
   try {
     const response = await fetch(targetURL, {
