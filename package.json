@@ -21,6 +21,19 @@
     "build:linux": "pnpm run build && electron-builder --linux"
   },
   "build": {
+    "win": {
+      "icon": "build/icons/icon.ico",
+      "target": [
+        {
+          "target": "nsis"
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true
+    },
     "directories": {
       "output": "dist"
     }
