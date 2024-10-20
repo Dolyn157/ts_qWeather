@@ -13,6 +13,22 @@ app.mount('#app');
 export const cityName: Ref<string> = ref('')
 export const isButtonEnable: Ref<boolean> = ref(true) //设置页面的开始提醒按钮是否可用
 
+interface notifyInfo {
+  cityID: string
+  now: nowInfo
+  latitude: number
+  longitude: number
+}
+
+interface nowInfo {
+  obsTime: string
+  temp: string
+  time: string
+  text: string
+  windDir: string
+  windScale: string
+}
+
 window.weatherAPI.onUpdateWeather((value) => {
   const notifyTitle = `和风天气提醒您：`
   const cityID = value.cityID
@@ -39,6 +55,7 @@ window.weatherAPI.onUpdateWeather((value) => {
   //https://pinia.vuejs.org/ 全局状态
   app.provide('latitude', Latitude)
   app.provide('longitude', Longitude)
+
   console.log(value.latitude + '经纬度')
   notify.onclick = function () {
     router.push('/details')

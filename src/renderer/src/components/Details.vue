@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onBeforeMount, ref} from 'vue'
+
 import Warning from "@renderer/components/Warning.vue";
 import Tabs from './Tabs.vue';
 import Ventusky from "@renderer/components/Ventusky.vue";
@@ -44,7 +44,7 @@ div {
   unicode-bidi: isolate;
 }
 .scrollable-container {
-  max-height: 800px; /* 根据需要调整最大高度 */
+  max-height: 700px; /* 根据需要调整最大高度 */
   overflow-y: auto; /* 启用竖向滚动条 */
   padding: 10px; /* 可选：添加内边距 */
   background-color: transparent; /* 可选：设置背景颜色 */
