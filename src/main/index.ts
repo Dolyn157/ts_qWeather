@@ -1,10 +1,17 @@
-import {app, shell, BrowserWindow, ipcMain, dialog} from 'electron'
+import {app, shell, BrowserWindow, ipcMain, dialog, Notification} from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import {getCityMap, fetchUrl} from './utils'
 import path from 'node:path'
 import schedule from 'node-schedule'
 import icon from '../../resources/icon.png?asset'
+import os from 'node:os'
+
+import { temperatureDescription } from '../shared/utils'
+import weatherHeroImages from './weather-hero-images'
+
+console.log('current platform:', os.platform());
+console.log('current os version:', os.release());
 
 //全局变量
 let mainWindow: BrowserWindow
@@ -132,7 +139,33 @@ ipcMain.on('mission', (_event, value) => {
       data[key2] = cityMap1.get(value).Latitude
       data[key3] = cityMap1.get(value).Longitude
       data[key4] = cityName
-      //console.log('Weather Data:', data);
+
+      if (os.platform() === 'win32') {
+        const obsTime = data.now.obsTime
+        const temp = data.now.temp
+        const text = data.now.text
+        const windDir = data.now.windDir
+        const windScale = data.now.windScale
+        const iconCode = data.now.icon
+
+        const temperatureDesc = temperatureDescription(temp)
+
+        new Notification({
+          toastXml: `
+      <toast launch="https://www.electronjs.org" activationType="protocol">
+        <visual>
+          <binding template="ToastGeneric">
+            <text>和风天气提醒您</text>
+            <text>${temp}℃ ${text}，${windDir} ${windScale} 级
+采样时间：${obsTime}</text>
+            <image placement="hero" src="${weatherHeroImages[`${temperatureDesc.description}${iconCode}`]}"/>
+          </binding>
+        </visual>
+      </toast>`
+        }).show()
+
+        return
+      }
       mainWindow.webContents.send('update-weather', data)
     })
     isTaskRunning = true; // 标记任务开始执行

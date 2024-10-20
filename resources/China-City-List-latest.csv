@@ -238,8 +238,8 @@ Location_ID,Location_Name_ZH,Adm1_Name_EN,Adm1_Name_ZH,Latitude,Longitude
 101310301,三沙,Hainan,海南省,16.8310,112.3488
 101320101,香港,Hong Kong SAR,香港特别行政区,22.3070,114.1770
 101330101,澳门,Macao SAR,澳门特别行政区,22.2020,113.5440
-101340101,台北,Taiwan, Province of China,台湾省,25.0375,121.5637
-101340201,高雄,Taiwan, Province of China,台湾省,22.6190,120.2760
-101340401,台中市,Taiwan, Province of China,台湾省,24.1440,120.6700
-60301,新丰乡,Taiwan, Province of China,台湾省,24.9070,120.9950
+101340101,台北,"Taiwan, Province of China",台湾省,25.0375,121.5637
+101340201,高雄,"Taiwan, Province of China",台湾省,22.6190,120.2760
+101340401,台中市,"Taiwan, Province of China",台湾省,24.1440,120.6700
+60301,新丰乡,"Taiwan, Province of China",台湾省,24.9070,120.9950
 EDF82,曼谷, Bangkok, 曼谷, 13.75000, 100.51667

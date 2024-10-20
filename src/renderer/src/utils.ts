@@ -1,4 +1,3 @@
-
 //加载城市地图字典
 
 export const fetchUrl = async (targetURL: string): Promise<{}> => {
