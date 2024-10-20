@@ -1,1 +1,3 @@
-import icon100 from './100.svg';
+const icons: Record<string, { default: string }> = import.meta.glob('./*.svg', { eager: true, query: 'url' })
+
+export default icons

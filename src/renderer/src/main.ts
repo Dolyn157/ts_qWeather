@@ -4,7 +4,7 @@ import { Ref, createApp, ref } from 'vue'
 import App from './App.vue'
 import router from "./router/router"
 
-const weatherIcons: Record<string, string> = import.meta.glob('./assets/weather-icons/*.svg', { eager: true, query: 'url' })
+import weatherIcons from './assets/weather-icons'
 
 const app = createApp(App);
 app.use(router);
@@ -25,8 +25,6 @@ window.weatherAPI.onUpdateWeather((value) => {
   const Longitude = value.longitude
   const icon = value.now.icon
 
-  console.log(weatherIcons[`./assets/weather-icons/${icon}.svg`])
-
   const notify: window.Notification = new window.Notification(notifyTitle,
     {
       body: `采样时间: ${obsTime}
@@ -34,7 +32,7 @@ window.weatherAPI.onUpdateWeather((value) => {
 天气状况: ${text}
 风向:${windDir}
 风力等级:${windScale}`,
-    icon: weatherIcons[`./assets/weather-icons/${icon}.svg`].default
+    icon: weatherIcons[`./${icon}.svg`].default
 })
 
   localStorage.setItem('city_ID', cityID)
