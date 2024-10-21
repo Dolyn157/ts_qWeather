@@ -152,7 +152,7 @@ ipcMain.on('mission', (_event, value) => {
 
         const notify = new Notification({
           toastXml: `
-      <toast launch="https://www.electronjs.org" activationType="protocol">
+      <toast activationType="protocol">
         <visual>
           <binding template="ToastGeneric">
             <text>和风天气提醒您</text>
