@@ -7,6 +7,7 @@ declare global {
     weatherAPI: {
       onUpdateWeather: (callback: (value: unknown) => void) => void
       getAlert: (baseURL: string) => Promise<unknown>
+      onWeatherNotificationClicked: (cb: () => void) => void
     }
   }
 }

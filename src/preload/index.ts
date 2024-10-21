@@ -7,6 +7,7 @@ const api = {}
 
 contextBridge.exposeInMainWorld('weatherAPI', {
   onUpdateWeather: (callback) => ipcRenderer.on('update-weather', (_event, value) => callback(value)),
+  onWeatherNotificationClicked: (callback) => ipcRenderer.on('notification-clicked', () => callback()),
   getAlert: (baseURL:string) => ipcRenderer.invoke('get-alert', baseURL),
 })
 
