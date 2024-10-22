@@ -36,7 +36,7 @@ let cityMap1 = new Map(); //城市字典 map 这个分号不能少，不然翻�
   csvFile = csvFile.slice(1)
   console.log(csvFile)
   cityMap1 = await getCityMap(csvFile);
-  console.log(cityMap1)
+  // console.log(cityMap1)
 })();
 
 function createWindow(): void {
@@ -150,9 +150,9 @@ ipcMain.on('mission', (_event, value) => {
 
         const temperatureDesc = temperatureDescription(temp)
 
-        new Notification({
+        const notify = new Notification({
           toastXml: `
-      <toast launch="https://www.electronjs.org" activationType="protocol">
+      <toast activationType="protocol">
         <visual>
           <binding template="ToastGeneric">
             <text>和风天气提醒您</text>
@@ -162,10 +162,19 @@ ipcMain.on('mission', (_event, value) => {
           </binding>
         </visual>
       </toast>`
-        }).show()
+        })
+
+        notify.removeAllListeners() // why this is necessary?
+        notify.on('click', (event) => {
+          event.preventDefault()
+          mainWindow.webContents.send('notification-clicked')
+          console.log('Notification clicked: main')
+        })
+        notify.show()
 
         return
       }
+
       mainWindow.webContents.send('update-weather', data)
     })
     isTaskRunning = true; // 标记任务开始执行

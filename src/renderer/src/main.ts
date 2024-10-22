@@ -29,6 +29,11 @@ interface nowInfo {
   windScale: string
 }
 
+window.weatherAPI.onWeatherNotificationClicked(() => {
+  console.log('Notification clicked: renderer')
+  router.push('/details')
+})
+
 window.weatherAPI.onUpdateWeather((value) => {
   const notifyTitle = `和风天气提醒您：`
   const cityID = value.cityID
