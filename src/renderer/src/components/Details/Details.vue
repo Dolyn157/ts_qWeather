@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
-import Warning from "@renderer/components/Warning.vue";
+import Warning from "@renderer/components/Details/Warning.vue";
 import Tabs from './Tabs.vue';
-import Ventusky from "@renderer/components/Ventusky.vue";
-import Weather from "@renderer/components/Weather.vue"; // Import the Tabs component
+import Ventusky from "@renderer/components/Details/Ventusky.vue";
+import Weather from "@renderer/components/Details/Weather.vue"; // Import the Tabs component
 
 const tabs = [
   { name: 'tab1', label: '天气概况' },
@@ -11,23 +11,24 @@ const tabs = [
   { name: 'tab3', label: 'Ventusky'}
 ];
 
+const activeTab = ref(tabs[0].name);
+activeTab.value = localStorage.getItem('activeTab');
+
 </script>
 
 <template>
   <div class="box scrollable-container">
     <Tabs :tabs="tabs">
-      <template #default="{ activeTab }">
-        <div v-if="activeTab === 'tab1'">
-          <Weather />
-        </div>
-        <div v-if="activeTab === 'tab2'">
-          <Warning />
-        </div>
-        <div v-if="activeTab === 'tab3'">
-          <Ventusky />
-        </div>
-      </template>
     </Tabs>
+    <div v-if="activeTab === 'tab1'">
+      <Weather />
+    </div>
+    <div v-if="activeTab === 'tab2'">
+      <Warning />
+    </div>
+    <div v-if="activeTab === 'tab3'">
+      <Ventusky />
+    </div>
 
     <div class="actions">
       <div class="action">

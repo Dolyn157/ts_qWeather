@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {onBeforeMount, ref} from 'vue'
-import {Gale, Typhoon, Thunderstorm, Fog, WarningSign, Monsoon, Lightning, Heavyrain, Dizhizaihai} from '../assets'
+import {Gale, Typhoon, Thunderstorm, Fog, WarningSign, Monsoon, Lightning, Heavyrain, Dizhizaihai} from '../../assets'
 
 const qWeatherAlertURL:string = "https://devapi.qweather.com/v7/warning/now?"
 const alertData = ref('')
