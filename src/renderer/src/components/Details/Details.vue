@@ -1,9 +1,11 @@
 <script setup lang="ts">
 
+import { ref, onUpdated} from "vue"
 import Warning from "@renderer/components/Details/Warning.vue";
 import Tabs from './Tabs.vue';
 import Ventusky from "@renderer/components/Details/Ventusky.vue";
 import Weather from "@renderer/components/Details/Weather.vue"; // Import the Tabs component
+import { activeTab } from '../../main'
 
 const tabs = [
   { name: 'tab1', label: '天气概况' },
@@ -11,8 +13,10 @@ const tabs = [
   { name: 'tab3', label: 'Ventusky'}
 ];
 
-const activeTab = ref(tabs[0].name);
-activeTab.value = localStorage.getItem('activeTab');
+onUpdated(() =>{
+  //activeTab.value = localStorage.getItem('activeTab');
+})
+
 
 </script>
 

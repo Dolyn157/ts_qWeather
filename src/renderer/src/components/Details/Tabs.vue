@@ -5,7 +5,7 @@
         v-for="tab in tabs"
         :key="tab.name"
         :class="['tab-title', { active: activeTab === tab.name }]"
-        @click="activeTab = tab.name"
+        @click="setActiveTab(tab)"
       >
         {{ tab.label }}
       </div>
@@ -14,7 +14,8 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from "vue";
+import { defineProps } from "vue";
+import { activeTab } from '../../main'
 
 const props = defineProps({
   tabs: {
@@ -23,8 +24,11 @@ const props = defineProps({
   },
 });
 
-const activeTab = ref(props.tabs[0].name); // Set default active tab
-localStorage.setItem('activeTab', activeTab.value)
+let setActiveTab = (tab) => {
+  activeTab.value = tab.name
+  //localStorage.setItem('activeTab', activeTab.value)
+}
+
 </script>
 
 <style scoped>

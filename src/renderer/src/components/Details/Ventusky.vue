@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {computed, inject} from "vue";
-const latitude: number = parseFloat(inject("latitude") as string);
-const longitude: number = parseFloat(inject("longitude") as string);
+import {Latitude, Longitude} from '@renderer/main'
 
 function round(number: number, precision: number) {
   if (isNaN(number)) {
@@ -13,8 +12,8 @@ function round(number: number, precision: number) {
 }
 
 const position = computed(() => {
-  const lat = round(latitude, 2)
-  const lng = round(longitude, 2)
+  const lat = round(Latitude, 2)
+  const lng = round(Longitude, 2)
   return `${lat};${lng};`
 })
 </script>
