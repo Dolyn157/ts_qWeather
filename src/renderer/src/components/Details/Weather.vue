@@ -125,10 +125,10 @@ p {
 }
 
 .l-page-city-weather {
-  height: 60vh;
-  width: 90vh;
+
+
   box-sizing: border-box; /* 包括 padding 和 border 在内 */
-  padding: 20px 0 30px;
+  padding: 20px 0 20px;
 }
 
 .container {

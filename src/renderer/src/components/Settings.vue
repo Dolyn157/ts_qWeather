@@ -1,4 +1,3 @@
-
 <template>
   <div class="box">
     <div class="text">
@@ -42,32 +41,47 @@
 import Versions from '@renderer/components/Versions.vue'
 import router from '@renderer/router/router'
 import { cityName, isButtonEnable } from '../main'
-import { ref } from 'vue'
+import { onMounted, Ref, ref } from 'vue'
+import { on } from 'events';
 
-const period1 = ref('')
+const period1: Ref<string> = ref('a')
+
+onMounted(()=>{
+  period1.value = localStorage.getItem('task-period') as string
+  cityName.value = localStorage.getItem('cityName') as string
+})
 
 //使用组合式 API 处理 dom 事件
-const ipcHandleStartMission = () => {
+const ipcHandleStartMission = async() => {
   if (isButtonEnable.valueOf()) {
-    window.electron.ipcRenderer.send('mission', cityName.value)
-    router.push('/details')
+
+    const result: boolean = await window.weatherAPI.startMission(cityName.value) as boolean
+    console.log(typeof(result))
+    if(result){
+      router.push('/details')
+    }
   } else {
     alert("你已经开始了一个任务，请先停止之前的任务")
   }
   isButtonEnable.value = false
 }
 const ipcHandleEndMission = () => {
-  window.electron.ipcRenderer.send('end-mission')
-  isButtonEnable.value = true
+  if(!isButtonEnable.value){
+    window.electron.ipcRenderer.send('end-mission')
+    isButtonEnable.value = true
+  }else{
+    alert("当前还未有任务")
+  }
 }
 
 const ipcSwitchPeriod = () => {
   window.electron.ipcRenderer.send('selected-period', period1.value)
+  localStorage.setItem('task-period',  period1.value)
 }
 </script>
 
 <style scoped>
-# false {
+#false {
   color: #42d392;
 }
 .box {
@@ -95,3 +109,4 @@ const ipcSwitchPeriod = () => {
   border:1px solid #ffffff;
 }
 </style>
+

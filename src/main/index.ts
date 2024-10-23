@@ -23,7 +23,7 @@ let isTaskRunning: boolean = false;
 
 //  和风API地址以及要查的城市
 const QWetherBaseURL: string = "https://devapi.qweather.com/v7/weather/now?"
-let cityID: string = "101281009" //湛江
+let cityIDForLink: string = "101281009" //湛江
 let cityName: string = ""
 let APIKey: string = ""
 //一些静态文件地址
@@ -109,7 +109,10 @@ app.on('window-all-closed', () => {
 // code. You can also put them in separate files and require them here.
 
 // IPC
-ipcMain.on('mission', (_event, value) => {
+
+ipcMain.handle('start-mission', startMission)
+
+async function startMission (_event, value): Promise<boolean>{
   console.log(value)
   if (!cityMap1.get(value)){
     dialog.showMessageBox({
@@ -118,27 +121,31 @@ ipcMain.on('mission', (_event, value) => {
       message: '在字典中找不到该城市',
       buttons:['ok']
     })
+    return false
   }else{
     if (isTaskRunning===true) {
       job1.cancel()
     }
 
-    cityID = cityMap1.get(value).Location_ID
-    cityName = value
+    cityIDForLink = cityMap1.get(value).Location_ID
+    const baseData = {
+      cityName: value,
+      latitude: parseFloat(cityMap1.get(value).Latitude),
+      longitude: parseFloat(cityMap1.get(value).Longitude),
+      cityID: cityMap1.get(value).Location_ID
+    }
+
+    console.log(baseData)
+    mainWindow.webContents.send('send-lat-and-long', baseData)
+
     job1 = schedule.scheduleJob("weather", periodRule, async function (){
       const data: object | undefined = await handleGetAlert(null, QWetherBaseURL);
       if (data == undefined){
         console.log('设置任务失败')
         return
       }
-      const key1: string = "cityID"
-      const key4: string = "cityName"
-      const key2: string = "latitude"
-      const key3: string = "longitude"
-      data[key1] = cityID
-      data[key2] = cityMap1.get(value).Latitude
-      data[key3] = cityMap1.get(value).Longitude
-      data[key4] = cityName
+
+      Object.assign(data, baseData)
 
       if (os.platform() === 'win32') {
         const obsTime = data.now.obsTime
@@ -179,7 +186,12 @@ ipcMain.on('mission', (_event, value) => {
     })
     isTaskRunning = true; // 标记任务开始执行
     console.log('任务开始执行');
+    return true
   }
+}
+
+ipcMain.on('mission', (_event, value): boolean => {
+
 })
 
 ipcMain.on('apiKey', (_event, value) => {
@@ -212,7 +224,7 @@ ipcMain.on('selected-period', (_event, value) => {
 })
 
 async function handleGetAlert(event, baseURL: string): Promise<object | undefined> {
-  const targetURL: string = `${baseURL}location=${cityID}&key=${APIKey}`
+  const targetURL: string = `${baseURL}location=${cityIDForLink}&key=${APIKey}`
   console.log(targetURL + event)
   let data: NonNullable<unknown>
   try {

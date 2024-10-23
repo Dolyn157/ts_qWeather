@@ -45,6 +45,7 @@
     "electron-squirrel-startup": "^1.0.1",
     "electron-updater": "^6.1.7",
     "glob": "^11.0.0",
+    "mitt": "^3.0.1",
     "node-schedule": "^2.1.1",
     "qweather-icons": "^1.6.0",
     "vue-router": "^4.4.5"
