@@ -14,30 +14,39 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, onMounted } from 'vue'
 import { activeTab } from '../../main'
+
 
 const props = defineProps({
   tabs: {
     type: Array,
-    required: true,
-  },
-});
+    required: true
+  }
+})
 
-let setActiveTab = (tab) => {
+onMounted(() => {
+
+})
+
+const setActiveTab = (tab) => {
   activeTab.value = tab.name
   //localStorage.setItem('activeTab', activeTab.value)
 }
-
 </script>
 
 <style scoped>
 .tabs {
-  border: 1px solid #ccc;
+  display: flex;
+  margin-top: 10em;
+  position: absolute;
+  height: 100vh;
 }
 .tab-titles {
+  width: 100vh;
   display: flex;
-  border-bottom: 1px solid #ccc;
+  border: 1px solid #ccc;
+  height: 3em;
 }
 .tab-title {
   padding: 10px 20px;

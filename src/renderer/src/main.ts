@@ -3,7 +3,7 @@ import './assets/main.css'
 import { Ref, createApp, ref } from 'vue'
 import App from './App.vue'
 import router from './router/router'
-import mitt from 'mitt'
+
 
 import weatherIcons from './assets/weather-icons'
 
@@ -14,8 +14,8 @@ app.mount('#app')
 export const cityName: Ref<string> = ref('')
 export const isButtonEnable: Ref<boolean> = ref(true) //设置页面的开始提醒按钮是否可用
 export const activeTab: Ref<string> = ref('text')
-export const Latitude = ref(0)
-export const Longitude = ref(0)
+export const Latitude: Ref<number> = ref(0.0)
+export const Longitude: Ref<number> = ref(0.0)
 
 interface notifyInfo {
   cityID: string
@@ -32,6 +32,14 @@ interface nowInfo {
   windDir: string
   windScale: string
 }
+
+window.weatherAPI.onSendLatAndLong((value) => {
+
+  Latitude.value = parseFloat(value.latitude)
+  Longitude.value = parseFloat(value.longitude)
+  cityName.value = value.cityName
+  console.log(Longitude.value + "经纬度\n")
+})
 
 window.weatherAPI.onWeatherNotificationClicked(() => {
   console.log('Notification clicked: renderer')
@@ -61,8 +69,7 @@ window.weatherAPI.onUpdateWeather((value) => {
 
   localStorage.setItem('city_ID', cityID)
   //https://pinia.vuejs.org/ 全局状态
-  app.provide('latitude', Latitude)
-  app.provide('longitude', Longitude)
+
 
   console.log(value.latitude + '经纬度')
   notify.onclick = function () {
@@ -70,4 +77,3 @@ window.weatherAPI.onUpdateWeather((value) => {
   }
 })
 
-function setLatAndLong(value: object) {}

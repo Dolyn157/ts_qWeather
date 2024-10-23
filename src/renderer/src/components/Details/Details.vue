@@ -1,63 +1,78 @@
 <script setup lang="ts">
-
-import { ref, onUpdated} from "vue"
-import Warning from "@renderer/components/Details/Warning.vue";
-import Tabs from './Tabs.vue';
-import Ventusky from "@renderer/components/Details/Ventusky.vue";
-import Weather from "@renderer/components/Details/Weather.vue"; // Import the Tabs component
-import { activeTab } from '../../main'
+import { onMounted } from 'vue'
+import Warning from '@renderer/components/Details/Warning.vue'
+import Tabs from './Tabs.vue'
+import Ventusky from '@renderer/components/Details/Ventusky.vue'
+import Weather from '@renderer/components/Details/Weather.vue' // Import the Tabs component
+import { activeTab, cityName } from '../../main'
 
 const tabs = [
   { name: 'tab1', label: '天气概况' },
   { name: 'tab2', label: '灾害预警' },
-  { name: 'tab3', label: 'Ventusky'}
-];
+  { name: 'tab3', label: 'Ventusky' }
+]
 
-onUpdated(() =>{
-  //activeTab.value = localStorage.getItem('activeTab');
+onMounted(() => {
+  activeTab.value = tabs[0].name
 })
-
-
 </script>
 
 <template>
-  <div class="box scrollable-container">
-    <Tabs :tabs="tabs">
-    </Tabs>
-    <div v-if="activeTab === 'tab1'">
+  <Tabs :tabs="tabs">
+  </Tabs>
+
+  <div class="scrollable-container">
+
+    <div v-if="activeTab === 'tab1'" class="abc">
+      <div class="title">
+        <h3 id="name">{{ cityName }} 天气</h3>
+      </div>
       <Weather />
     </div>
-    <div v-if="activeTab === 'tab2'">
+    <div v-if="activeTab === 'tab2'" class="abc">
+      <div class="title">
+        <h3 id="name">{{ cityName }} 预警</h3>
+      </div>
       <Warning />
     </div>
-    <div v-if="activeTab === 'tab3'">
+    <div v-if="activeTab === 'tab3'" class="abc">
       <Ventusky />
     </div>
-
-    <div class="actions">
-      <div class="action">
-        <RouterLink to="/setting">返回主页</RouterLink>
-      </div>
+  </div>
+  <div class="actions">
+    <div class="action">
+      <RouterLink to="/setting">返回主页</RouterLink>
     </div>
   </div>
 </template>
 
-
 <style scoped>
-div {
-  display: block;
-  unicode-bidi: isolate;
+
+h3 {
+  text-align: center;
+  margin-top: 1em;
 }
 .scrollable-container {
-  max-height: 700px; /* 根据需要调整最大高度 */
   overflow-y: auto; /* 启用竖向滚动条 */
-  padding: 10px; /* 可选：添加内边距 */
+
+  width: 100vh;
   background-color: transparent; /* 可选：设置背景颜色 */
 }
-.action{
+.abc {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.actions {
+  position: absolute;
+  height: 100vh;
+  display: flex;
+  flex-direction: column-reverse;
+}
+.action {
   display: flex; /* 使用 Flexbox */
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
-  height: 80px; /* */
 }
 </style>
+
